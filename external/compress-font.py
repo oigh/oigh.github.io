@@ -182,10 +182,10 @@ body {{
 
 def main():
     """Main function to process font subsetting and compression"""
-    input_font = "MapleMono-NF-CN-Regular.ttf"
-    charset_file = "chinese-charset-game.txt"
-    subset_font = "MapleMono-NF-CN-Regular-Sub.ttf"
-    output_woff2 = "../resource/font/MapleMono-NF-CN-Regular.woff2"
+    input_font = "./external/MapleMono-NF-CN-Regular.ttf"
+    charset_file = "./external/chinese-charset-game.txt"
+    subset_font = "./external/MapleMono-NF-CN-Regular-Sub.ttf"
+    output_woff2 = "./resource/font/MapleMono-NF-CN-Regular.woff2"
     
     # Check dependencies
     check_dependencies()

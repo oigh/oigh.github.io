@@ -49,11 +49,17 @@ export class NumberHelper {
         return stringToFormat;
     }
 
-    static fn(n, l) {
+    static fn(n, l = -1) {
+        if (l < 0) {
+            return this.formatNumber(n);
+        }
         return this.formatStringLength(this.formatNumber(n), l);
     }
 
-    static fnp(n, l) {
+    static fnp(n, l = -1) {
+        if (l < 0) {
+            return this.formatNumberPercent(n);
+        }
         return this.formatStringLength(this.formatNumberPercent(n), l);
     }
 }

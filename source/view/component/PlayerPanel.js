@@ -1,5 +1,5 @@
-import {getPlayerManager} from "../../Game.js";
-import {NumberHelper} from "../../helper/NumberHelper.js";
+import { getPlayerManager } from "../../Game.js";
+import { AttributeFormatter } from "../../module/design/AttributeFomatter.js";
 
 export class PlayerPanel extends PIXI.Container {
     constructor() {
@@ -7,11 +7,15 @@ export class PlayerPanel extends PIXI.Container {
 
         const p = getPlayerManager().getPlayer();
 
-        let s =
-            `攻击: ${NumberHelper.fn(p.attack, 6)}  攻速: ${NumberHelper.fnp(p.speed, 6)}  ` +
-            `生命: ${NumberHelper.fn(p.health, 6)}  防御: ${NumberHelper.fn(p.defend, 6)}\n\n` +
-            `暴击: ${NumberHelper.fnp(p.cProb, 6)}  暴伤: ${NumberHelper.fnp(p.cScale, 6)}  ` +
-            `闪避: ${NumberHelper.fnp(p.miss, 6)}  吸血: ${NumberHelper.fnp(p.absorb, 6)}`;
+        const s =
+            AttributeFormatter.fl('attack', p.attack, 6) + '  ' +
+            AttributeFormatter.fl('speed', p.speed, 6) + '  ' +
+            AttributeFormatter.fl('health', p.health, 6) + '  ' +
+            AttributeFormatter.fl('defend', p.defend, 6) + '\n\n' +
+            AttributeFormatter.fl('cProb', p.cProb, 6) + '  ' +
+            AttributeFormatter.fl('cScale', p.cScale, 6) + '  ' +
+            AttributeFormatter.fl('miss', p.miss, 6) + '  ' +
+            AttributeFormatter.fl('absorb', p.absorb, 6);
 
         this.contentText = new PIXI.Text(s, {
             ...PIXI.Text.defaultStyle,

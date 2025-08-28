@@ -21,16 +21,13 @@ export class WeaponSlidePanel extends PIXI.Container {
         }
 
         for (let i = 0; i < 10; i++) {
-
-            let gameWeapon = getArchiveManager().LocalGameStatus.weapons[weaponArray[i].key];
-
-            if (!gameWeapon) {
-                gameWeapon = new GameWeapon();
-            }
-
             const item = new WeaponCard();
-            item.setWeapon(weaponArray[i], gameWeapon.level, gameWeapon.appendStrength, gameWeapon.star);
-            item.on('click', this.onClick.bind(this));
+            item.setWeapon(weaponArray[i]);
+            item.on('click', () => {
+                this.weaponDataPanel.setWeapon(weaponArray[i]);
+                this.weaponDataPanel.eventMode = 'static';
+                this.weaponDataPanel.alpha = 1;
+            });
             slideContainer.addChild(item);
         }
 
@@ -44,10 +41,5 @@ export class WeaponSlidePanel extends PIXI.Container {
         this.addChild(this.weaponDataPanel);
         this.weaponDataPanel.eventMode = 'none';
         this.weaponDataPanel.alpha = 0;
-    }
-
-    onClick() {
-        this.weaponDataPanel.eventMode = 'static';
-        this.weaponDataPanel.alpha = 1;
     }
 }

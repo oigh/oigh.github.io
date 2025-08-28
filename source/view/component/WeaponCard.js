@@ -1,6 +1,7 @@
 import { WeaponIcon } from "./WeaponIcon.js";
 import { NumberHelper } from "../../helper/NumberHelper.js";
 import { getArchiveManager } from "../../Game.js";
+import { GameWeapon } from "../../module/design/GameWeapon.js";
 
 export class WeaponCard extends PIXI.Container {
     constructor() {
@@ -105,9 +106,14 @@ export class WeaponCard extends PIXI.Container {
         }
     }
 
-    setWeapon(weapon, level, appendStrength, starCount) {
+    setWeapon(weapon) {
+        let gameWeapon = getArchiveManager().LocalGameStatus.weapons[weapon.key];
 
-        if (level === 0) {
+        if (!gameWeapon) {
+            gameWeapon = new GameWeapon();
+        }
+
+        if (gameWeapon.level === 0) {
             const colorMatrix = new PIXI.ColorMatrixFilter();
             colorMatrix.blackAndWhite();
             this.icon.imageSprite.filters = [colorMatrix];
@@ -131,7 +137,7 @@ export class WeaponCard extends PIXI.Container {
         ];
 
         for (let i = 0; i < this.starArray.length; i++) {
-            if (i < starCount) {
+            if (i < gameWeapon.star) {
                 this.starArray[i].alpha = 1;
                 this.starArray[i].filters = [cm];
             } else {
@@ -140,18 +146,18 @@ export class WeaponCard extends PIXI.Container {
         }
 
         this.icon.imageSprite.texture = PIXI.Texture.from(`resource/image/weapon/${weapon.image}.png`);
-        this.titleText.text = `L${level} ${weapon.name} + ${appendStrength}`;
-        const attackDamage = (Number(weapon.strength) + Number(appendStrength)) * level;
-        this.contentText.text = `攻击: ${NumberHelper.formatNumber(attackDamage)} = (${weapon.strength} + ${appendStrength}) x ${level}`;
+        this.titleText.text = `L${gameWeapon.level} ${weapon.name} + ${gameWeapon.appendStrength}`;
+        const attackDamage = (Number(weapon.strength) + Number(gameWeapon.appendStrength)) * gameWeapon.level;
+        this.contentText.text = `攻击: ${NumberHelper.formatNumber(attackDamage)} = (${weapon.strength} + ${gameWeapon.appendStrength}) x ${gameWeapon.level}`;
 
         const props = getArchiveManager().LocalGameStatus.props;
 
-        const sLevel = NumberHelper.fn(weapon.strength * level, 6);
+        const sLevelUp = NumberHelper.fn(weapon.strength * gameWeapon.level);
 
-        const sStrength = NumberHelper.formatStringLength((Number(weapon.strength) + Number(appendStrength)) + `(${props[weapon.key + 'Stone'] ?? 0})`, 10);
+        const sStrengthUp = (Number(weapon.strength) + Number(gameWeapon.appendStrength)) + `(${props[weapon.key + 'Stone'] ?? 0})`;
 
-        const sStar = NumberHelper.formatStringLength(2 ** starCount + `(${props[weapon.key + 'Stone'] ?? 0})`, 10);
+        const sStarUp = 2 ** gameWeapon.star + `(${props[weapon.key + 'Stone'] ?? 0})`;
 
-        this.appendText.text = `强化: ${sLevel}  重铸: ${sStrength}  升星: ${sStar}`;
+        this.appendText.text = `强化: ${sLevelUp}  重铸: ${sStrengthUp}  升星: ${sStarUp}`;
     }
 }

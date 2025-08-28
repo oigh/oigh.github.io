@@ -157,7 +157,7 @@ def install_pngquant():
 
 if __name__ == "__main__":
     # Get target directory from user input
-    target_directory = "../resource/image" # input("Enter directory path to process (default: current directory): ").strip()
+    target_directory = "./resource/image" # input("Enter directory path to process (default: current directory): ").strip()
     if not target_directory:
         target_directory = "."
     
