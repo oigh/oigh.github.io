@@ -2,6 +2,7 @@ import { getArchiveManager } from "../../Game.js";
 import { NumberHelper } from "../../helper/NumberHelper.js";
 import { ATTRIBUTE_CHINESE } from "../../module/design/AttributeChinese.js";
 import { AttributeFormatter } from "../../module/design/AttributeFomatter.js";
+import { GameWeapon } from "../../module/design/GameWeapon.js";
 import { TextButton } from "./TextButton.js";
 import { WeaponIcon } from "./WeaponIcon.js";
 
@@ -16,6 +17,15 @@ export class WeaponDataPanel extends PIXI.Container {
         this.panelHeight = 1200;
 
         this.setup();
+
+        const unsubscribeHandle = getArchiveManager().subscribe((gameStatus) => {
+            if (this.gameWeapon && this.weaponProfile) {
+                const props = gameStatus.props;
+                this.appendStrengthDescriptionText.text = `强化需要${this.weaponProfile.stoneName}: ${2 ** this.gameWeapon.appendStrength}(${props[this.weaponProfile.key + 'Stone'] ?? 0})`;
+                this.starDescriptionText.text = `升星需要${this.weaponProfile.starName}: ${2 ** this.gameWeapon.star}(${props[this.weaponProfile.key + 'Star'] ?? 0})`;
+                this.levelDescriptionText.text = `升级需要金币: ${NumberHelper.fn(this.weaponProfile.strength * this.gameWeapon.level)}(${NumberHelper.fn(props['coin'] ?? 0)})`;
+            }
+        });
     }
 
     setup() {
@@ -44,12 +54,12 @@ export class WeaponDataPanel extends PIXI.Container {
         this.createStarLabel();
 
         this.strengthUpButton = new TextButton();
-        this.strengthUpButton.position.set(600, 225);
+        this.strengthUpButton.position.set(600, 175);
         this.strengthUpButton.titleText.text = '强化';
         this.addChild(this.strengthUpButton);
 
         this.starUpButton = new TextButton();
-        this.starUpButton.position.set(600, 375);
+        this.starUpButton.position.set(600, 350);
         this.starUpButton.titleText.text = '升星';
         this.addChild(this.starUpButton);
 
@@ -103,16 +113,7 @@ export class WeaponDataPanel extends PIXI.Container {
         this.appendText.position.set(-400, -375);
         this.addChild(this.appendText);
 
-        let y = -175;
-        const stepY = 75;
-
-        this.attackLabelText = new PIXI.Text('ATTACK_LABEL', {
-            ...PIXI.Text.defaultStyle, fontSize: 50,
-        });
-        this.attackLabelText.position.set(-this.panelWidth / 2 + 100, y);
-        this.addChild(this.attackLabelText);
-
-        y += stepY;
+        let y = -200;
 
         this.attackDescriptionText = new PIXI.Text('攻击 = (基础强度 + 附加强度) x 等级', {
             ...PIXI.Text.defaultStyle, fontSize: 50,
@@ -121,15 +122,7 @@ export class WeaponDataPanel extends PIXI.Container {
         this.attackDescriptionText.position.set(-this.panelWidth / 2 + 100, y);
         this.addChild(this.attackDescriptionText);
 
-        y += stepY;
-
-        this.appendValueText = new PIXI.Text('VALUE_LABEL', {
-            ...PIXI.Text.defaultStyle, fontSize: 50,
-        });
-        this.appendValueText.position.set(-this.panelWidth / 2 + 100, y);
-        this.addChild(this.appendValueText);
-
-        y += stepY;
+        y += 75;
 
         this.appendValueDescriptionText = new PIXI.Text('附加属性 = 基础附加属性 x 星级', {
             ...PIXI.Text.defaultStyle, fontSize: 50,
@@ -138,23 +131,49 @@ export class WeaponDataPanel extends PIXI.Container {
         this.appendValueDescriptionText.position.set(-this.panelWidth / 2 + 100, y);
         this.addChild(this.appendValueDescriptionText);
 
-        y += stepY;
+        y += 100;
 
-        this.baseAttackText = new PIXI.Text('BASE_ATTACK', {
+        this.baseStrengthText = new PIXI.Text('BASE_STRENGTH', {
             ...PIXI.Text.defaultStyle, fontSize: 50,
         });
-        this.baseAttackText.position.set(-this.panelWidth / 2 + 100, y);
-        this.addChild(this.baseAttackText);
+        this.baseStrengthText.position.set(-this.panelWidth / 2 + 100, y);
+        this.addChild(this.baseStrengthText);
 
-        y += stepY;
+        y += 75;
 
-        this.appendAttackText = new PIXI.Text('APPEND_ATTACK', {
+        this.appendStrengthText = new PIXI.Text('APPEND_STRENGTH', {
             ...PIXI.Text.defaultStyle, fontSize: 50,
         });
-        this.appendAttackText.position.set(-this.panelWidth / 2 + 100, y);
-        this.addChild(this.appendAttackText);
+        this.appendStrengthText.position.set(-this.panelWidth / 2 + 100, y);
+        this.addChild(this.appendStrengthText);
 
-        y += stepY;
+        y += 75;
+
+        this.appendStrengthDescriptionText = new PIXI.Text('APPEND_STRENGTH_DESCRIPTION', {
+            ...PIXI.Text.defaultStyle, fontSize: 50,
+        });
+        this.appendStrengthDescriptionText.alpha = 0.4;
+        this.appendStrengthDescriptionText.position.set(-this.panelWidth / 2 + 100, y);
+        this.addChild(this.appendStrengthDescriptionText);
+
+        y += 100;
+
+        this.starText = new PIXI.Text('STAR', {
+            ...PIXI.Text.defaultStyle, fontSize: 50,
+        });
+        this.starText.position.set(-this.panelWidth / 2 + 100, y);
+        this.addChild(this.starText);
+
+        y += 75;
+
+        this.starDescriptionText = new PIXI.Text('STAR_DESCRIPTION', {
+            ...PIXI.Text.defaultStyle, fontSize: 50,
+        });
+        this.starDescriptionText.alpha = 0.4;
+        this.starDescriptionText.position.set(-this.panelWidth / 2 + 100, y);
+        this.addChild(this.starDescriptionText);
+
+        y += 100;
 
         this.levelText = new PIXI.Text('LEVEL', {
             ...PIXI.Text.defaultStyle, fontSize: 50,
@@ -162,20 +181,22 @@ export class WeaponDataPanel extends PIXI.Container {
         this.levelText.position.set(-this.panelWidth / 2 + 100, y);
         this.addChild(this.levelText);
 
-        y += stepY;
+        y += 75;
 
-        this.starText = new PIXI.Text('STAR', {
+        this.levelDescriptionText = new PIXI.Text('LEVEL_DESCRIPTION', {
             ...PIXI.Text.defaultStyle, fontSize: 50,
         });
-        this.starText.position.set(-this.panelWidth / 2 + 100, y);
-        this.addChild(this.starText);
+        this.levelDescriptionText.alpha = 0.4;
+        this.levelDescriptionText.position.set(-this.panelWidth / 2 + 100, y);
+        this.addChild(this.levelDescriptionText);
     }
 
-    setWeapon(weapon) {
-        let gameWeapon = getArchiveManager().LocalGameStatus.weapons[weapon.key];
+    setWeapon(weaponProfile) {
+        this.weaponProfile = weaponProfile;
+        this.gameWeapon = getArchiveManager().LocalGameStatus.weapons[this.weaponProfile.key];
 
-        if (!gameWeapon) {
-            gameWeapon = new GameWeapon();
+        if (!this.gameWeapon) {
+            this.gameWeapon = new GameWeapon();
         }
 
         const cm = new PIXI.ColorMatrixFilter();
@@ -186,7 +207,7 @@ export class WeaponDataPanel extends PIXI.Container {
         ];
 
         for (let i = 0; i < this.starArray.length; i++) {
-            if (i < gameWeapon.star) {
+            if (i < this.gameWeapon.star) {
                 this.starArray[i].alpha = 1;
                 this.starArray[i].filters = [cm];
             } else {
@@ -194,23 +215,25 @@ export class WeaponDataPanel extends PIXI.Container {
             }
         }
 
-        this.icon.imageSprite.texture = PIXI.Texture.from(`resource/image/weapon/${weapon.image}.png`);
-        this.titleText.text = `L${gameWeapon.level} ${weapon.name} + ${gameWeapon.appendStrength}`;
-        const attackDamage = (Number(weapon.strength) + Number(gameWeapon.appendStrength)) * gameWeapon.level;
-        this.contentText.text = `攻击: ${NumberHelper.formatNumber(attackDamage)}`;
-        this.attackLabelText.text = `攻击: ${NumberHelper.formatNumber(attackDamage)} = (${weapon.strength} + ${gameWeapon.appendStrength}) x ${gameWeapon.level}`;
+        this.icon.imageSprite.texture = PIXI.Texture.from(`resource/image/weapon/${this.weaponProfile.image}.png`);
+        this.titleText.text = `L${this.gameWeapon.level} ${this.weaponProfile.name} + ${this.gameWeapon.appendStrength}`;
+        const attackDamage = (Number(this.weaponProfile.strength) + Number(this.gameWeapon.appendStrength)) * this.gameWeapon.level;
+        this.contentText.text = `攻击: ${NumberHelper.formatNumber(attackDamage)} = (${this.weaponProfile.strength} + ${this.gameWeapon.appendStrength}) x ${this.gameWeapon.level}`;
 
-        const appendValue = Number(weapon.appendBaseValue) * gameWeapon.star;
-        const chinese = ATTRIBUTE_CHINESE[weapon.appendType];
-        this.appendText.text = `${chinese}: ${AttributeFormatter.f(weapon.appendType, appendValue)}`;
-        this.appendValueText.text = `${chinese}: ${AttributeFormatter.f(weapon.appendType, weapon.appendBaseValue)} x ${gameWeapon.star}`;
+        const appendValue = this.weaponProfile.appendBaseValue * this.gameWeapon.star;
+        const chinese = ATTRIBUTE_CHINESE[this.weaponProfile.appendType];
+        this.appendText.text = `${chinese}: ${AttributeFormatter.f(this.weaponProfile.appendType, appendValue)} = ${AttributeFormatter.f(this.weaponProfile.appendType, this.weaponProfile.appendBaseValue)} x ${this.gameWeapon.star}`;
 
-        this.baseAttackText.text = `基础强度: ${weapon.strength}`;
+        this.baseStrengthText.text = `基础强度: ${this.weaponProfile.strength}`;
+
+        this.appendStrengthText.text = `附加强度: ${this.gameWeapon.appendStrength}`;
+        this.starText.text = `星级: ${this.gameWeapon.star}`;
+        this.levelText.text = `等级: ${this.gameWeapon.level}`;
 
         const props = getArchiveManager().LocalGameStatus.props;
 
-        this.appendAttackText.text = `附加强度: ${gameWeapon.appendStrength}  强化需要${'stoneName'}: ${(Number(weapon.strength) + Number(gameWeapon.appendStrength)) + `(${props[weapon.key + 'Stone'] ?? 0})`}`;
-        
-        this.starText.text = `星级: ${gameWeapon.star}  升星需要${'starName'}: ${2 ** gameWeapon.star + `(${props[weapon.key + 'Stone'] ?? 0})`}`;
+        this.appendStrengthDescriptionText.text = `强化需要${this.weaponProfile.stoneName}: ${2 ** this.gameWeapon.appendStrength}(${props[this.weaponProfile.key + 'Stone'] ?? 0})`;
+        this.starDescriptionText.text = `升星需要${this.weaponProfile.starName}: ${2 ** this.gameWeapon.star}(${props[this.weaponProfile.key + 'Star'] ?? 0})`;
+        this.levelDescriptionText.text = `升级需要金币: ${NumberHelper.fn(this.weaponProfile.strength * this.gameWeapon.level)}(${NumberHelper.fn(props['coin'] ?? 0)})`;
     }
 }

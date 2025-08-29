@@ -4,6 +4,7 @@ import { PlayerPanel } from "../component/PlayerPanel.js";
 import { GameStatus } from "../../module/design/GameStatus.js";
 import { GameWeapon } from "../../module/design/GameWeapon.js";
 import { getArchiveManager } from "../../Game.js";
+import { CoinPanel } from "../component/CoinPanel.js";
 
 export class StartPage extends PIXI.Container {
     constructor(app) {
@@ -36,6 +37,10 @@ export class StartPage extends PIXI.Container {
         this.playerPanel = new PlayerPanel(this.app);
         this.playerPanel.position.set(1000, 1500);
         this.addChild(this.playerPanel);
+
+        this.coinPanel = new CoinPanel(this.app);
+        this.coinPanel.position.set(1000, 1800);
+        this.addChild(this.coinPanel);
     }
 
     onEnter() {

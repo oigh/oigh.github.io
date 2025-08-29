@@ -14,6 +14,17 @@ export class WeaponCard extends PIXI.Container {
         this.init();
 
         this.pivot.set(1000, 200);
+
+        const unsubscribeHandle = getArchiveManager().subscribe((gameStatus) => {
+            if (this.gameWeapon && this.weaponProfile) {
+                const props = getArchiveManager().LocalGameStatus.props;
+                const sLevelUp = NumberHelper.fn(this.weaponProfile.strength * this.gameWeapon.level) + `(${NumberHelper.fn(props['coin'] ?? 0)})`;
+                const sStrengthUp = 2 ** this.gameWeapon.appendStrength + `(${props[this.weaponProfile.key + 'Stone'] ?? 0})`;
+                const sStarUp = 2 ** this.gameWeapon.star + `(${props[this.weaponProfile.key + 'Stone'] ?? 0})`;
+
+                this.appendText.text = `强化: ${sStrengthUp}  升星: ${sStarUp}  升级: ${sLevelUp}`;
+            }
+        });
     }
 
     init() {
@@ -106,14 +117,15 @@ export class WeaponCard extends PIXI.Container {
         }
     }
 
-    setWeapon(weapon) {
-        let gameWeapon = getArchiveManager().LocalGameStatus.weapons[weapon.key];
+    setWeapon(weaponProfile) {
+        this.weaponProfile = weaponProfile;
+        this.gameWeapon = getArchiveManager().LocalGameStatus.weapons[this.weaponProfile.key];
 
-        if (!gameWeapon) {
-            gameWeapon = new GameWeapon();
+        if (!this.gameWeapon) {
+            this.gameWeapon = new GameWeapon();
         }
 
-        if (gameWeapon.level === 0) {
+        if (this.gameWeapon.level === 0) {
             const colorMatrix = new PIXI.ColorMatrixFilter();
             colorMatrix.blackAndWhite();
             this.icon.imageSprite.filters = [colorMatrix];
@@ -137,7 +149,7 @@ export class WeaponCard extends PIXI.Container {
         ];
 
         for (let i = 0; i < this.starArray.length; i++) {
-            if (i < gameWeapon.star) {
+            if (i < this.gameWeapon.star) {
                 this.starArray[i].alpha = 1;
                 this.starArray[i].filters = [cm];
             } else {
@@ -145,19 +157,17 @@ export class WeaponCard extends PIXI.Container {
             }
         }
 
-        this.icon.imageSprite.texture = PIXI.Texture.from(`resource/image/weapon/${weapon.image}.png`);
-        this.titleText.text = `L${gameWeapon.level} ${weapon.name} + ${gameWeapon.appendStrength}`;
-        const attackDamage = (Number(weapon.strength) + Number(gameWeapon.appendStrength)) * gameWeapon.level;
-        this.contentText.text = `攻击: ${NumberHelper.formatNumber(attackDamage)} = (${weapon.strength} + ${gameWeapon.appendStrength}) x ${gameWeapon.level}`;
+        this.icon.imageSprite.texture = PIXI.Texture.from(`resource/image/weapon/${this.weaponProfile.image}.png`);
+        this.titleText.text = `L${this.gameWeapon.level} ${this.weaponProfile.name} + ${this.gameWeapon.appendStrength}`;
+        const attackValue = (Number(this.weaponProfile.strength) + Number(this.gameWeapon.appendStrength)) * this.gameWeapon.level;
+        this.contentText.text = `攻击: ${NumberHelper.formatNumber(attackValue)} = (${this.weaponProfile.strength} + ${this.gameWeapon.appendStrength}) x ${this.gameWeapon.level}`;
 
         const props = getArchiveManager().LocalGameStatus.props;
 
-        const sLevelUp = NumberHelper.fn(weapon.strength * gameWeapon.level);
+        const sLevelUp = NumberHelper.fn(this.weaponProfile.strength * this.gameWeapon.level) + `(${NumberHelper.fn(props['coin'] ?? 0)})`;
+        const sStrengthUp = 2 ** this.gameWeapon.appendStrength + `(${props[this.weaponProfile.key + 'Stone'] ?? 0})`;
+        const sStarUp = 2 ** this.gameWeapon.star + `(${props[this.weaponProfile.key + 'Stone'] ?? 0})`;
 
-        const sStrengthUp = (Number(weapon.strength) + Number(gameWeapon.appendStrength)) + `(${props[weapon.key + 'Stone'] ?? 0})`;
-
-        const sStarUp = 2 ** gameWeapon.star + `(${props[weapon.key + 'Stone'] ?? 0})`;
-
-        this.appendText.text = `强化: ${sLevelUp}  重铸: ${sStrengthUp}  升星: ${sStarUp}`;
+        this.appendText.text = `强化: ${sStrengthUp}  升星: ${sStarUp}  升级: ${sLevelUp}`;
     }
 }

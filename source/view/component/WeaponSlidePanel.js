@@ -1,7 +1,6 @@
 import { SlideContainer } from "./SlideContainer.js";
 import { WeaponCard } from "./WeaponCard.js";
-import { getArchiveManager, getResourceManager } from "../../Game.js";
-import { GameWeapon } from "../../module/design/GameWeapon.js";
+import { getResourceManager } from "../../Game.js";
 import { WeaponDataPanel } from "./WeaponDataPanel.js";
 
 export class WeaponSlidePanel extends PIXI.Container {

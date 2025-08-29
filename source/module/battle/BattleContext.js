@@ -1,4 +1,4 @@
-import { getPlayerManager, getResourceManager } from "../../Game.js";
+import { getArchiveManager, getPlayerManager, getResourceManager } from "../../Game.js";
 import { BattleCreature } from "./BattleCreature.js";
 
 export class BattleContext {
@@ -26,10 +26,10 @@ export class BattleContext {
 
             const enemyKey = this.enemyArray[this.enemyIndex];
             const enemyData = getResourceManager().getData('creature', enemyKey);
-            this.enemy = new BattleCreature(this, enemyData);
+            this.enemy = new BattleCreature(this, () => { return enemyData; });
 
             const playerData = getPlayerManager().getPlayer();
-            this.player = new BattleCreature(this, playerData);
+            this.player = new BattleCreature(this, () => { return  getPlayerManager().getPlayer(); });
 
             this.onPlayerChange(playerData);
             this.onEnemyChange(enemyData);
@@ -97,14 +97,19 @@ export class BattleContext {
         }
 
         if (this.enemy && this.enemy.state === BattleCreature.STATE_NULL) {
+
+            // get coin
+            getArchiveManager().addProp('coin', this.enemy.getCreature().attack);
+
             if (this.enemyIndex + 1 < this.enemyArray.length) {
                 this.enemyIndex++;
             } else {
                 this.enemyIndex = 0;
             }
+
             const enemyKey = this.enemyArray[this.enemyIndex];
             const enemyData = getResourceManager().getData('creature', enemyKey);
-            this.enemy = new BattleCreature(this, enemyData);
+            this.enemy = new BattleCreature(this, () => { return enemyData; });
 
             this.onEnemyChange(enemyData);
         }

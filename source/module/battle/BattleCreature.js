@@ -1,4 +1,4 @@
-import {BattleBullet} from "./BattleBullet.js";
+import { BattleBullet } from "./BattleBullet.js";
 
 export class BattleCreature {
 
@@ -11,7 +11,7 @@ export class BattleCreature {
     static DEAD_TIME = 1000;
     static COOL_TIME = 1000;
 
-    constructor(context, creature) {
+    constructor(context, getCreature) {
         this.context = context;
         this.state = BattleCreature.STATE_BORN;
 
@@ -22,13 +22,13 @@ export class BattleCreature {
 
         this.haveTarget = false;
 
-        this.creature = creature;
-        this.health = this.creature.health;
+        this.getCreature = getCreature;
+        this.health = this.getCreature().health;
     }
 
     update(delta) {
 
-        delta = delta * this.creature.speed / 1000;
+        delta = delta * this.getCreature().speed / 1000;
 
         const updateMap = new Map();
 
@@ -56,7 +56,7 @@ export class BattleCreature {
                         break;
                     }
                     // do attack
-                    this.context.addBullet(new BattleBullet(this === this.context.player, this.creature.attack, this.creature.cProb, this.creature.cScale));
+                    this.context.addBullet(new BattleBullet(this === this.context.player, this.getCreature().attack, this.getCreature().cProb, this.getCreature().cScale));
                     this.coolTimer += BattleCreature.COOL_TIME;
                 }
 
