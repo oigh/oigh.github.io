@@ -13,7 +13,7 @@ let archiveManager = null;
 export function initGame(app) {
     initResourceManager().then(() => {
         archiveManager = new ArchiveManager();
-        playerManager = new PlayerManager(getArchiveManager().LocalGameStatus.weapons);
+        playerManager = new PlayerManager();
 
         getArchiveManager().subscribe((gameStatus => {
             getPlayerManager().updatePlayerData(gameStatus.weapons);

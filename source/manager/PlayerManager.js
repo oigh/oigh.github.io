@@ -2,11 +2,11 @@ import { getResourceManager } from "../Game.js";
 
 export class PlayerManager {
 
-    constructor(weapons) {
+    constructor() {
         this._obs = new Set();
-        this.updatePlayerData(weapons);
+        this.updatePlayerData({});
     }
-    
+
     subscribe(observer) {
         this._obs.add(observer);
         if (this._data !== null) {
