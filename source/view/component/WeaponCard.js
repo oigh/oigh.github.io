@@ -15,14 +15,11 @@ export class WeaponCard extends PIXI.Container {
 
         this.pivot.set(1000, 200);
 
-        const unsubscribeHandle = getArchiveManager().subscribe((gameStatus) => {
-            if (this.gameWeapon && this.weaponProfile) {
-                const props = getArchiveManager().LocalGameStatus.props;
-                const sLevelUp = NumberHelper.fn(this.weaponProfile.strength * this.gameWeapon.level) + `(${NumberHelper.fn(props['coin'] ?? 0)})`;
-                const sStrengthUp = 2 ** this.gameWeapon.appendStrength + `(${props[this.weaponProfile.key + 'Stone'] ?? 0})`;
-                const sStarUp = 2 ** this.gameWeapon.star + `(${props[this.weaponProfile.key + 'Stone'] ?? 0})`;
 
-                this.appendText.text = `强化: ${sStrengthUp}  升星: ${sStarUp}  升级: ${sLevelUp}`;
+        const unsubscribeHandle = getArchiveManager().subscribe((gameStatus) => {
+            if (this.weaponProfile) {
+                this.gameWeapon = gameStatus.weapons[this.weaponProfile.key] ?? new GameWeapon();
+                this.refreshWeapon();
             }
         });
     }
@@ -113,14 +110,18 @@ export class WeaponCard extends PIXI.Container {
     onPointerUp() {
         if (this.click) {
             this.click = false;
-            this.emit('click', this);
+            this.emit('clickWithoutMove', this);
         }
     }
 
     setWeapon(weaponProfile) {
         this.weaponProfile = weaponProfile;
+        this.icon.imageSprite.texture = PIXI.Texture.from(`resource/image/weapon/${this.weaponProfile.image}.png`);
         this.gameWeapon = getArchiveManager().LocalGameStatus.weapons[this.weaponProfile.key];
+        this.refreshWeapon();
+    }
 
+    refreshWeapon() {
         if (!this.gameWeapon) {
             this.gameWeapon = new GameWeapon();
         }
@@ -157,16 +158,15 @@ export class WeaponCard extends PIXI.Container {
             }
         }
 
-        this.icon.imageSprite.texture = PIXI.Texture.from(`resource/image/weapon/${this.weaponProfile.image}.png`);
         this.titleText.text = `L${this.gameWeapon.level} ${this.weaponProfile.name} + ${this.gameWeapon.appendStrength}`;
         const attackValue = (Number(this.weaponProfile.strength) + Number(this.gameWeapon.appendStrength)) * this.gameWeapon.level;
         this.contentText.text = `攻击: ${NumberHelper.formatNumber(attackValue)} = (${this.weaponProfile.strength} + ${this.gameWeapon.appendStrength}) x ${this.gameWeapon.level}`;
 
         const props = getArchiveManager().LocalGameStatus.props;
 
-        const sLevelUp = NumberHelper.fn(this.weaponProfile.strength * this.gameWeapon.level) + `(${NumberHelper.fn(props['coin'] ?? 0)})`;
-        const sStrengthUp = 2 ** this.gameWeapon.appendStrength + `(${props[this.weaponProfile.key + 'Stone'] ?? 0})`;
-        const sStarUp = 2 ** this.gameWeapon.star + `(${props[this.weaponProfile.key + 'Stone'] ?? 0})`;
+        const sLevelUp = GameWeapon.getLevelUpCost(this.weaponProfile, this.gameWeapon) + `(${NumberHelper.fn(props['coin'] ?? 0)})`;
+        const sStrengthUp = GameWeapon.getAppendStrengthUpCost(this.gameWeapon) + `(${props[this.weaponProfile.key + 'Stone'] ?? 0})`;
+        const sStarUp = GameWeapon.getStarUpCost(this.gameWeapon) + `(${props[this.weaponProfile.key + 'Stone'] ?? 0})`;
 
         this.appendText.text = `强化: ${sStrengthUp}  升星: ${sStarUp}  升级: ${sLevelUp}`;
     }

@@ -18,6 +18,15 @@ export class BattleContext {
         this.level = null;
     }
 
+    createEnemy(enemyKey) {
+        const enemyData = getResourceManager().getData('creature', enemyKey);
+        enemyData.health *= this.level.level;
+        enemyData.attack *= this.level.level;
+        this.enemy = new BattleCreature(this, () => { return enemyData; });
+
+        this.onEnemyChange(enemyData);
+    }
+
     loadLevel(levelKey) {
         this.level = getResourceManager().getData('level', levelKey);
         this.enemyArray = this.level.enemy.split('#');
@@ -25,14 +34,11 @@ export class BattleContext {
             this.enemyIndex = 0;
 
             const enemyKey = this.enemyArray[this.enemyIndex];
-            const enemyData = getResourceManager().getData('creature', enemyKey);
-            this.enemy = new BattleCreature(this, () => { return enemyData; });
+            this.createEnemy(enemyKey);
 
             const playerData = getPlayerManager().getPlayer();
-            this.player = new BattleCreature(this, () => { return  getPlayerManager().getPlayer(); });
-
+            this.player = new BattleCreature(this, () => { return getPlayerManager().getPlayer(); });
             this.onPlayerChange(playerData);
-            this.onEnemyChange(enemyData);
 
             this._bulletList = [];
             this.update(0);
@@ -108,10 +114,7 @@ export class BattleContext {
             }
 
             const enemyKey = this.enemyArray[this.enemyIndex];
-            const enemyData = getResourceManager().getData('creature', enemyKey);
-            this.enemy = new BattleCreature(this, () => { return enemyData; });
-
-            this.onEnemyChange(enemyData);
+            this.createEnemy(enemyKey);
         }
 
         return false;

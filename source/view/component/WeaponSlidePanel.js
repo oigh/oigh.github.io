@@ -22,7 +22,7 @@ export class WeaponSlidePanel extends PIXI.Container {
         for (let i = 0; i < 10; i++) {
             const item = new WeaponCard();
             item.setWeapon(weaponArray[i]);
-            item.on('click', () => {
+            item.on('clickWithoutMove', () => {
                 this.weaponDataPanel.setWeapon(weaponArray[i]);
                 this.weaponDataPanel.eventMode = 'static';
                 this.weaponDataPanel.alpha = 1;

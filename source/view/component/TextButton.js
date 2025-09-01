@@ -49,7 +49,6 @@ export class TextButton extends PIXI.Container {
     }
 
     onPointerDown() {
-        this.emit('click', this);
     }
 
     onPointerUp() {

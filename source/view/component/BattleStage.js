@@ -3,6 +3,7 @@ import { BattleContext } from "../../module/battle/BattleContext.js";
 import { BulletSprite } from "./BulletSprite.js";
 import { TextEffect } from "./TextEffect.js";
 import { AnimHelper } from "../../helper/AnimHelper.js";
+import { getResourceManager } from '../../Game.js';
 
 export class BattleStage extends PIXI.Container {
     constructor(app) {
@@ -17,6 +18,40 @@ export class BattleStage extends PIXI.Container {
         this.enemyCard.position.set(500, 0);
         this.addChild(this.enemyCard);
 
+        this.topText = new PIXI.Text('', {
+            ...PIXI.Text.defaultStyle,
+            fontSize: 50,
+        });
+        this.topText.anchor.set(0.5);
+        this.topText.position.set(0, -400);
+        this.addChild(this.topText);
+
+        this.bottomText = new PIXI.Text('', {
+            ...PIXI.Text.defaultStyle,
+            fontSize: 50,
+        });
+        this.bottomText.anchor.set(0.5);
+        this.bottomText.position.set(0, 400);
+        this.addChild(this.bottomText);
+
+        this.initBattleContext();
+    }
+
+    update() {
+        if (this.battleContext.update(this.app.ticker.elapsedMS)) {
+            this.battleContext.loadLevel('FlowerVillage');
+        }
+    }
+
+    onEnter() {
+        this.app.ticker.add(this.update, this);
+    }
+
+    onLeave() {
+        this.app.ticker.remove(this.update, this);
+    }
+
+    initBattleContext() {
         this._bulletMap = new Map();
 
         this._effectCancelHandlerList = [];
@@ -28,6 +63,9 @@ export class BattleStage extends PIXI.Container {
         };
 
         this.battleContext.onEnemyChange = (enemy) => {
+            this.topText.text = `当前关卡: ${this.battleContext.level.name}`;
+            const enemyData = getResourceManager().getData('creature', this.battleContext.enemyArray[0]);
+            this.bottomText.text = `击败BOSS${enemyData.name}解锁下一关`;
             this.enemyCard.setCreature(enemy);
         };
 
@@ -102,19 +140,5 @@ export class BattleStage extends PIXI.Container {
         }
 
         this.battleContext.loadLevel('FlowerVillage');
-    }
-
-    update() {
-        if (this.battleContext.update(this.app.ticker.elapsedMS)) {
-            this.battleContext.loadLevel('FlowerVillage');
-        }
-    }
-
-    onEnter() {
-        this.app.ticker.add(this.update, this);
-    }
-
-    onLeave() {
-        this.app.ticker.remove(this.update, this);
     }
 }

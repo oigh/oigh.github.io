@@ -35,7 +35,7 @@ export class ResourceManager {
         return t;
     }
 
-    getData(tableName, key){
+    getData(tableName, key) {
         if (!this._data[tableName]) {
             throw new Error(`table [${tableName}] not exist`);
         }
@@ -46,14 +46,14 @@ export class ResourceManager {
             throw new Error(`key [${key}] not exist in table [${tableName}]`);
         }
 
-        return table[key];
+        return { ...table[key] };
     }
 
-    getTable(tableName){
+    getTable(tableName) {
         if (!this._data[tableName]) {
             throw new Error(`table [${tableName}] not exist`);
         }
 
-        return  this._data[tableName];
+        return this._data[tableName];
     }
 }

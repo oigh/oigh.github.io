@@ -15,6 +15,13 @@ export function initGame(app) {
         archiveManager = new ArchiveManager();
         playerManager = new PlayerManager();
 
+        // init
+        if (!getArchiveManager().LocalGameStatus) {
+            const status = new GameStatus();
+            status.weapons["WoodSword"] = new GameWeapon(1);
+            getArchiveManager().LocalGameStatus = status;
+        }
+
         getArchiveManager().subscribe((gameStatus => {
             getPlayerManager().updatePlayerData(gameStatus.weapons);
         }))

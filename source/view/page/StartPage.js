@@ -5,16 +5,12 @@ import { GameStatus } from "../../module/design/GameStatus.js";
 import { GameWeapon } from "../../module/design/GameWeapon.js";
 import { getArchiveManager } from "../../Game.js";
 import { CoinPanel } from "../component/CoinPanel.js";
+import { TopPanel } from "../component/TopPanel.js";
 
 export class StartPage extends PIXI.Container {
     constructor(app) {
         super();
         this.app = app;
-
-        // init
-        const status = new GameStatus();
-        status.weapons["WoodSword"] = new GameWeapon(1);
-        getArchiveManager().LocalGameStatus = status;
 
         this.setup();
     }
@@ -41,6 +37,10 @@ export class StartPage extends PIXI.Container {
         this.coinPanel = new CoinPanel(this.app);
         this.coinPanel.position.set(1000, 1800);
         this.addChild(this.coinPanel);
+
+        this.topPanel = new TopPanel(this.app);
+        this.topPanel.position.set(1000, 200);
+        this.addChild(this.topPanel);
     }
 
     onEnter() {

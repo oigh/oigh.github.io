@@ -5,21 +5,23 @@ export class PlayerPanel extends PIXI.Container {
     constructor() {
         super();
 
-        const p = getPlayerManager().getPlayer();
-
-        const s =
-            AttributeFormatter.fl('attack', p.attack, 6) + '  ' +
-            AttributeFormatter.fl('speed', p.speed, 6) + '  ' +
-            AttributeFormatter.fl('health', p.health, 6) + '  ' +
-            AttributeFormatter.fl('defend', p.defend, 6) + '\n\n' +
-            AttributeFormatter.fl('cProb', p.cProb, 6) + '  ' +
-            AttributeFormatter.fl('cScale', p.cScale, 6) + '  ' +
-            AttributeFormatter.fl('miss', p.miss, 6) + '  ' +
-            AttributeFormatter.fl('absorb', p.absorb, 6);
-
-        this.contentText = new PIXI.Text(s, {
+        this.contentText = new PIXI.Text('', {
             ...PIXI.Text.defaultStyle,
             fontSize: 50,
+        });
+
+        const unsubscribeHandle = getPlayerManager().subscribe((p) => {
+            const s =
+                AttributeFormatter.fl('attack', p.attack, 6) + '  ' +
+                AttributeFormatter.fl('speed', p.speed, 6) + '  ' +
+                AttributeFormatter.fl('health', p.health, 6) + '  ' +
+                AttributeFormatter.fl('defend', p.defend, 6) + '\n\n' +
+                AttributeFormatter.fl('cProb', p.cProb, 6) + '  ' +
+                AttributeFormatter.fl('cScale', p.cScale, 6) + '  ' +
+                AttributeFormatter.fl('miss', p.miss, 6) + '  ' +
+                AttributeFormatter.fl('absorb', p.absorb, 6);
+
+            this.contentText.text = s;
         });
 
         this.contentText.anchor.set(0.5, 0.5);
