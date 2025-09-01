@@ -22,12 +22,10 @@ export class ResourceManager {
             });
         });
 
-        const t = {};
+        const t = new Map();
         parseResult.data.forEach(row => {
             if (row.key) {
-                const key = row.key;
-                // delete row.key;
-                t[key] = row;
+                t.set(row.key, row);
             }
         });
 
@@ -42,11 +40,12 @@ export class ResourceManager {
 
         const table = this._data[tableName];
 
-        if (!table[key]) {
+        const ret = table.get(key);
+        if (!ret) {
             throw new Error(`key [${key}] not exist in table [${tableName}]`);
         }
 
-        return { ...table[key] };
+        return { ...ret };
     }
 
     getTable(tableName) {

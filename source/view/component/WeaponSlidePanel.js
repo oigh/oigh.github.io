@@ -13,7 +13,7 @@ export class WeaponSlidePanel extends PIXI.Container {
 
         const dataTable = getResourceManager().getTable('weapon');
 
-        const weaponArray = Object.values(dataTable).sort((l, r) => l.strength - r.strength);
+        const weaponArray = Array.from(dataTable);
 
         if (weaponArray.length < 10) {
             throw new Error("data error");
@@ -21,9 +21,9 @@ export class WeaponSlidePanel extends PIXI.Container {
 
         for (let i = 0; i < 10; i++) {
             const item = new WeaponCard();
-            item.setWeapon(weaponArray[i]);
+            item.setWeapon(weaponArray[i][1]);
             item.on('clickWithoutMove', () => {
-                this.weaponDataPanel.setWeapon(weaponArray[i]);
+                this.weaponDataPanel.setWeapon(weaponArray[i][1]);
                 this.weaponDataPanel.eventMode = 'static';
                 this.weaponDataPanel.alpha = 1;
             });

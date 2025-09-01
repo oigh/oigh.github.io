@@ -28,8 +28,10 @@ export class BattleContext {
     }
 
     loadLevel(levelKey) {
+
         this.level = getResourceManager().getData('level', levelKey);
         this.enemyArray = this.level.enemy.split('#');
+        this.pass = false;
         if (this.enemyArray.length > 0) {
             this.enemyIndex = 0;
 
@@ -40,12 +42,14 @@ export class BattleContext {
             this.player = new BattleCreature(this, () => { return getPlayerManager().getPlayer(); });
             this.onPlayerChange(playerData);
 
+            for (const bullet of this._bulletList) {
+                this.onBulletRemove(bullet);
+            }
             this._bulletList = [];
             this.update(0);
         }
         else {
             throw new Error("load empty level");
-
         }
     }
 
@@ -110,6 +114,7 @@ export class BattleContext {
             if (this.enemyIndex + 1 < this.enemyArray.length) {
                 this.enemyIndex++;
             } else {
+                this.pass = true;
                 this.enemyIndex = 0;
             }
 

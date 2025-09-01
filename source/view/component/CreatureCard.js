@@ -113,7 +113,6 @@ export class CreatureCard extends PIXI.Container {
     }
 
     onPointerDown() {
-        this.emit('click', this);
     }
 
     onPointerUp() {

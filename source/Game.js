@@ -4,6 +4,8 @@ import { PlayerManager } from "./manager/PlayerManager.js";
 import { ResourceManager } from "./manager/ResourceManager.js";
 import { ArchiveManager } from "./manager/ArchiveManager.js";
 import { WeaponDataPanel } from "./view/component/WeaponDataPanel.js";
+import { GameStatus } from "./module/design/GameStatus.js";
+import { GameWeapon } from "./module/design/GameWeapon.js";
 
 let pageManager = null;
 let playerManager = null;
@@ -16,6 +18,7 @@ export function initGame(app) {
         playerManager = new PlayerManager();
 
         // init
+        getArchiveManager().LocalGameStatus = null;
         if (!getArchiveManager().LocalGameStatus) {
             const status = new GameStatus();
             status.weapons["WoodSword"] = new GameWeapon(1);

@@ -3,7 +3,8 @@ import { BattleContext } from "../../module/battle/BattleContext.js";
 import { BulletSprite } from "./BulletSprite.js";
 import { TextEffect } from "./TextEffect.js";
 import { AnimHelper } from "../../helper/AnimHelper.js";
-import { getResourceManager } from '../../Game.js';
+import { getArchiveManager, getResourceManager } from '../../Game.js';
+import { TextButton } from './TextButton.js';
 
 export class BattleStage extends PIXI.Container {
     constructor(app) {
@@ -34,12 +35,38 @@ export class BattleStage extends PIXI.Container {
         this.bottomText.position.set(0, 400);
         this.addChild(this.bottomText);
 
+        this.nextButton = new TextButton(500);
+        this.nextButton.position.set(0, 400);
+        this.nextButton.titleText.text = '进入下一关卡';
+        this.nextButton.on('pointerup', () => {
+
+            const status = getArchiveManager().LocalGameStatus;
+            const levelArray = Array.from(getResourceManager().getTable('level'));
+
+            let index = -1;
+            let currentIndex = 0;
+
+            for (const value of levelArray) {
+                if (value[1].key === status.level) {
+                    index = currentIndex;
+                    break;
+                }
+                currentIndex++;
+            }
+
+            if (index + 1 < levelArray.length) {
+                status.level = levelArray[index + 1][1].key;
+                this.battleContext.loadLevel(getArchiveManager().LocalGameStatus.level);
+            }
+        });
+        this.addChild(this.nextButton);
+
         this.initBattleContext();
     }
 
     update() {
         if (this.battleContext.update(this.app.ticker.elapsedMS)) {
-            this.battleContext.loadLevel('FlowerVillage');
+            this.battleContext.loadLevel(getArchiveManager().LocalGameStatus.level);
         }
     }
 
@@ -64,8 +91,17 @@ export class BattleStage extends PIXI.Container {
 
         this.battleContext.onEnemyChange = (enemy) => {
             this.topText.text = `当前关卡: ${this.battleContext.level.name}`;
-            const enemyData = getResourceManager().getData('creature', this.battleContext.enemyArray[0]);
-            this.bottomText.text = `击败BOSS${enemyData.name}解锁下一关`;
+            if (this.battleContext.pass) {
+                this.bottomText.text = ``;
+                this.nextButton.alpha = 1;
+                this.nextButton.eventMode = 'static';
+            }
+            else {
+                const enemyData = getResourceManager().getData('creature', this.battleContext.enemyArray[this.battleContext.enemyArray.length - 1]);
+                this.bottomText.text = `击败BOSS${enemyData.name}解锁下一关卡`;
+                this.nextButton.alpha = 0;
+                this.nextButton.eventMode = 'none';
+            }
             this.enemyCard.setCreature(enemy);
         };
 
@@ -139,6 +175,6 @@ export class BattleStage extends PIXI.Container {
             }
         }
 
-        this.battleContext.loadLevel('FlowerVillage');
+        this.battleContext.loadLevel(getArchiveManager().LocalGameStatus.level);
     }
 }

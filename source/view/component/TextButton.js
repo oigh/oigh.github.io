@@ -1,14 +1,14 @@
 export class TextButton extends PIXI.Container {
-    constructor() {
+    constructor(width = 250, height = 125) {
         super();
 
-        this.cardWidth = 250;
-        this.cardHeight = 125;
+        this.cardWidth = width;
+        this.cardHeight = height;
         this.border = 5;
         this.color = 0xffffff;
         this.init();
-        
-        this.pivot.set(125, 125);
+
+        this.pivot.set(width / 2, height / 2);
     }
 
     init() {
@@ -28,7 +28,7 @@ export class TextButton extends PIXI.Container {
             fontSize: 50,
         });
         this.titleText.anchor.set(0.5);
-        this.titleText.position.set(this.cardWidth / 2, this.cardHeight /2);
+        this.titleText.position.set(this.cardWidth / 2, this.cardHeight / 2);
         this.addChild(this.titleText);
     }
 

@@ -1,3 +1,5 @@
+import { getResourceManager } from "../../Game.js";
+
 export class GameStatus {
 
     constructor() {
@@ -6,5 +8,7 @@ export class GameStatus {
             coin: 0,
             ruby: 0,
         };
+
+        this.level = getResourceManager().getTable('level').values().next().value.key;
     }
 }
