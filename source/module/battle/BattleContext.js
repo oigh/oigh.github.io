@@ -42,8 +42,10 @@ export class BattleContext {
             this.player = new BattleCreature(this, () => { return getPlayerManager().getPlayer(); });
             this.onPlayerChange(playerData);
 
-            for (const bullet of this._bulletList) {
-                this.onBulletRemove(bullet);
+            if (this._bulletList) {
+                for (const bullet of this._bulletList) {
+                    this.onBulletRemove(bullet);
+                }
             }
             this._bulletList = [];
             this.update(0);
