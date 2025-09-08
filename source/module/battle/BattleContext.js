@@ -27,11 +27,11 @@ export class BattleContext {
         this.onEnemyChange(enemyData);
     }
 
-    loadLevel(levelKey) {
+    loadLevel(levelKey, pass = false) {
 
         this.level = getResourceManager().getData('level', levelKey);
         this.enemyArray = this.level.enemy.split('#');
-        this.pass = false;
+        this.pass = pass;
         if (this.enemyArray.length > 0) {
             this.enemyIndex = 0;
 

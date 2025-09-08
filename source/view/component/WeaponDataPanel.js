@@ -52,25 +52,25 @@ export class WeaponDataPanel extends PIXI.Container {
         this.createStarLabel();
 
         this.strengthUpButton = new TextButton();
-        this.strengthUpButton.position.set(600, 175);
+        this.strengthUpButton.position.set(600, -50);
         this.strengthUpButton.titleText.text = '强化';
         this.strengthUpButton.on('pointerup', this.onAppendStrengthUpClick.bind(this));
         this.addChild(this.strengthUpButton);
 
         this.starUpButton = new TextButton();
-        this.starUpButton.position.set(600, 350);
+        this.starUpButton.position.set(600, 200);
         this.starUpButton.titleText.text = '升星';
         this.starUpButton.on('pointerup', this.onStarUpClick.bind(this));
         this.addChild(this.starUpButton);
 
         this.levelUpButton = new TextButton();
-        this.levelUpButton.position.set(600, 525);
+        this.levelUpButton.position.set(600, 450);
         this.levelUpButton.titleText.text = '升级';
         this.levelUpButton.on('pointerup', this.onLevelUpClick.bind(this));
         this.addChild(this.levelUpButton);
 
         this.background.eventMode = 'static';
-        this.background.on('pointerdown', this.onBackgroundClick.bind(this));
+        this.background.on('pointerup', this.onBackgroundClick.bind(this));
     }
 
     onBackgroundClick() {

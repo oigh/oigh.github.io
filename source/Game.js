@@ -36,7 +36,6 @@ export function initGame(app) {
 function initPageManager(app) {
     pageManager = new PageManager(app);
     pageManager.registerPage("start", new StartPage(app));
-    pageManager.registerPage("weapon", new WeaponDataPanel(app));
     pageManager.switchTo("start").then();
 }
 

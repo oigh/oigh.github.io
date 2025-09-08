@@ -1,5 +1,5 @@
 export class TextButton extends PIXI.Container {
-    constructor(width = 250, height = 125) {
+    constructor(width = 250, height = 200) {
         super();
 
         this.cardWidth = width;
@@ -13,9 +13,16 @@ export class TextButton extends PIXI.Container {
 
     init() {
         this.frame = new PIXI.Graphics()
-            .lineStyle(this.border, 0xFFFFFF, 0.2)
+            .lineStyle(this.border, 0xFFFFFF, 0.4)
             .drawRect(this.border, this.border, this.cardWidth - this.border * 2, this.cardHeight - this.border * 2);
         this.addChild(this.frame);
+
+        this.f = new PIXI.Graphics()
+            .lineStyle(this.border, 0xFFFFFF, 0.2)
+            .drawRect(20, 20, this.cardWidth - 40, this.cardHeight - 40);
+        this.addChild(this.f);
+
+        this.hitArea = new PIXI.Rectangle(0, 0, this.cardWidth, this.cardHeight);
 
         this.createTitleLabel();
         this.setupInteractivity();

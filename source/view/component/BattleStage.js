@@ -24,7 +24,7 @@ export class BattleStage extends PIXI.Container {
             fontSize: 50,
         });
         this.topText.anchor.set(0.5);
-        this.topText.position.set(0, -400);
+        this.topText.position.set(0, -500);
         this.addChild(this.topText);
 
         this.bottomText = new PIXI.Text('', {
@@ -32,33 +32,11 @@ export class BattleStage extends PIXI.Container {
             fontSize: 50,
         });
         this.bottomText.anchor.set(0.5);
-        this.bottomText.position.set(0, 400);
+        this.bottomText.position.set(0, 500);
         this.addChild(this.bottomText);
 
-        this.nextButton = new TextButton(500);
-        this.nextButton.position.set(0, 400);
-        this.nextButton.titleText.text = '进入下一关卡';
-        this.nextButton.on('pointerup', () => {
-
-            const status = getArchiveManager().LocalGameStatus;
-            const levelArray = Array.from(getResourceManager().getTable('level'));
-
-            let index = -1;
-            let currentIndex = 0;
-
-            for (const value of levelArray) {
-                if (value[1].key === status.level) {
-                    index = currentIndex;
-                    break;
-                }
-                currentIndex++;
-            }
-
-            if (index + 1 < levelArray.length) {
-                status.level = levelArray[index + 1][1].key;
-                this.battleContext.loadLevel(getArchiveManager().LocalGameStatus.level);
-            }
-        });
+        this.nextButton = new TextButton(1000);
+        this.nextButton.position.set(0, 500);
         this.addChild(this.nextButton);
 
         this.initBattleContext();
@@ -66,7 +44,7 @@ export class BattleStage extends PIXI.Container {
 
     update() {
         if (this.battleContext.update(this.app.ticker.elapsedMS)) {
-            this.battleContext.loadLevel(getArchiveManager().LocalGameStatus.level);
+            this.battleContext.loadLevel(getArchiveManager().LocalGameStatus.level, true);
         }
     }
 
@@ -90,6 +68,34 @@ export class BattleStage extends PIXI.Container {
         };
 
         this.battleContext.onEnemyChange = (enemy) => {
+
+            const status = getArchiveManager().LocalGameStatus;
+            const levelArray = Array.from(getResourceManager().getTable('level'));
+
+            let index = -1;
+            let currentIndex = 0;
+
+            for (const value of levelArray) {
+                if (value[1].key === status.level) {
+                    index = currentIndex;
+                    break;
+                }
+                currentIndex++;
+            }
+
+            const nextLevelIndex = index + 1;
+            const nextLevel = levelArray[nextLevelIndex][1];
+
+            this.nextButton.titleText.text = `进入下一关卡: ${nextLevel.name}`;
+            this.nextButton.on('pointerup', () => {
+                if (nextLevelIndex < levelArray.length) {
+                    const status = getArchiveManager().LocalGameStatus;
+                    status.level = levelArray[nextLevelIndex][1].key;
+                    getArchiveManager().LocalGameStatus = status;
+                    this.battleContext.loadLevel(getArchiveManager().LocalGameStatus.level, false);
+                }
+            });
+
             this.topText.text = `当前关卡: ${this.battleContext.level.name}`;
             if (this.battleContext.pass) {
                 this.bottomText.text = ``;
@@ -98,7 +104,7 @@ export class BattleStage extends PIXI.Container {
             }
             else {
                 const enemyData = getResourceManager().getData('creature', this.battleContext.enemyArray[this.battleContext.enemyArray.length - 1]);
-                this.bottomText.text = `击败BOSS${enemyData.name}解锁下一关卡`;
+                this.bottomText.text = `击败BOSS${enemyData.name}解锁下一关卡: ${nextLevel.name}`;
                 this.nextButton.alpha = 0;
                 this.nextButton.eventMode = 'none';
             }
@@ -175,6 +181,6 @@ export class BattleStage extends PIXI.Container {
             }
         }
 
-        this.battleContext.loadLevel(getArchiveManager().LocalGameStatus.level);
+        this.battleContext.loadLevel(getArchiveManager().LocalGameStatus.level, false);
     }
 }

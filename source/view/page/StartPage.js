@@ -1,11 +1,11 @@
 import { BattleStage } from "../component/BattleStage.js";
 import { WeaponSlidePanel } from "../component/WeaponSlidePanel.js";
 import { PlayerPanel } from "../component/PlayerPanel.js";
-import { GameStatus } from "../../module/design/GameStatus.js";
-import { GameWeapon } from "../../module/design/GameWeapon.js";
-import { getArchiveManager } from "../../Game.js";
 import { CoinPanel } from "../component/CoinPanel.js";
 import { TopPanel } from "../component/TopPanel.js";
+import { BottomPanel } from "../component/BottomPanel.js";
+import { LevelSlidePanel } from "../component/LevelSlidePanel.js";
+import { getArchiveManager } from "../../Game.js";
 
 export class StartPage extends PIXI.Container {
     constructor(app) {
@@ -31,16 +31,39 @@ export class StartPage extends PIXI.Container {
         this.addChild(this.weaponPanel);
 
         this.playerPanel = new PlayerPanel(this.app);
-        this.playerPanel.position.set(1000, 1500);
+        this.playerPanel.position.set(1000, 1600);
         this.addChild(this.playerPanel);
 
         this.coinPanel = new CoinPanel(this.app);
-        this.coinPanel.position.set(1000, 1800);
+        this.coinPanel.position.set(1000, 1900);
         this.addChild(this.coinPanel);
 
         this.topPanel = new TopPanel(this.app);
         this.topPanel.position.set(1000, 200);
         this.addChild(this.topPanel);
+
+        this.bottomPanel = new BottomPanel(this.app);
+        this.bottomPanel.position.set(1000, 3800);
+        this.addChild(this.bottomPanel);
+
+        this.levelSlidePanel = new LevelSlidePanel(this.app);
+        this.levelSlidePanel.position.set(1000, 2000);
+        this.addChild(this.levelSlidePanel);
+
+        this.levelSlidePanel.eventMode = 'none';
+        this.levelSlidePanel.alpha = 0;
+
+        this.topPanel.mapButton.on('pointerup', () => {
+            this.levelSlidePanel.eventMode = 'static';
+            this.levelSlidePanel.alpha = 1;
+        });
+
+        this.levelSlidePanel.on('levelSelect', (level) => {
+            const status = getArchiveManager().LocalGameStatus;
+            status.level = level.key;
+            getArchiveManager().LocalGameStatus = status;
+            this.battleStage.battleContext.loadLevel(getArchiveManager().LocalGameStatus.level, false);
+        });
     }
 
     onEnter() {
