@@ -5,6 +5,7 @@ import { TextEffect } from "./TextEffect.js";
 import { AnimHelper } from "../../helper/AnimHelper.js";
 import { getArchiveManager, getResourceManager } from '../../Game.js';
 import { TextButton } from './TextButton.js';
+import { GameWeapon } from '../../module/design/GameWeapon.js';
 
 export class BattleStage extends PIXI.Container {
     constructor(app) {
@@ -56,7 +57,7 @@ export class BattleStage extends PIXI.Container {
 
     update() {
         if (this.battleContext.update(this.app.ticker.elapsedMS)) {
-            this.battleContext.loadLevel(getArchiveManager().LocalGameStatus.level, true);
+            this.battleContext.loadLevel(getArchiveManager().LocalGameStatus.level, this.battleContext.pass);
         }
     }
 

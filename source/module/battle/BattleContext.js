@@ -1,4 +1,5 @@
 import { getArchiveManager, getPlayerManager, getResourceManager } from "../../Game.js";
+import { GameWeapon } from "../design/GameWeapon.js";
 import { BattleCreature } from "./BattleCreature.js";
 
 export class BattleContext {
@@ -118,6 +119,26 @@ export class BattleContext {
             } else {
                 this.pass = true;
                 this.enemyIndex = 0;
+
+                const weaponArray = Array.from(getResourceManager().getTable('weapon'));
+                const levelArray = Array.from(getResourceManager().getTable('level'));
+
+                const status = getArchiveManager().LocalGameStatus;
+                let index = 0;
+                for (const value of levelArray) {
+                    if (value[0] === status.level) {
+                        break;
+                    }
+                    index++;
+                }
+
+                if (index + 1 < weaponArray.length) {
+                    const weaponKey = weaponArray[index + 1][0];
+                    if (!status.weapons[weaponKey]) {
+                        status.weapons[weaponKey] = new GameWeapon(1);
+                        getArchiveManager().LocalGameStatus = status;
+                    }
+                }
             }
 
             const enemyKey = this.enemyArray[this.enemyIndex];
