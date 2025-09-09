@@ -11,6 +11,13 @@ export class BattleStage extends PIXI.Container {
         super();
         this.app = app;
 
+        this.imageSprite = new PIXI.Sprite(PIXI.Texture.EMPTY);
+        this.imageSprite.position.set(-1000, -500);
+        this.imageSprite.width = 2000;
+        this.imageSprite.height = 1000;
+        this.imageSprite.alpha = 0.4;
+        this.addChild(this.imageSprite);
+
         this.playerCard = new CreatureCard();
         this.playerCard.position.set(-500, 0);
         this.addChild(this.playerCard);
@@ -24,7 +31,7 @@ export class BattleStage extends PIXI.Container {
             fontSize: 50,
         });
         this.topText.anchor.set(0.5);
-        this.topText.position.set(0, -500);
+        this.topText.position.set(0, -600);
         this.addChild(this.topText);
 
         this.bottomText = new PIXI.Text('', {
@@ -32,11 +39,11 @@ export class BattleStage extends PIXI.Container {
             fontSize: 50,
         });
         this.bottomText.anchor.set(0.5);
-        this.bottomText.position.set(0, 500);
+        this.bottomText.position.set(0, 600);
         this.addChild(this.bottomText);
 
         this.nextButton = new TextButton(1000);
-        this.nextButton.position.set(0, 500);
+        this.nextButton.position.set(0, 600);
         this.addChild(this.nextButton);
 
         this.initBattleContext();
@@ -72,42 +79,49 @@ export class BattleStage extends PIXI.Container {
             const status = getArchiveManager().LocalGameStatus;
             const levelArray = Array.from(getResourceManager().getTable('level'));
 
-            let index = -1;
-            let currentIndex = 0;
+            // get next level
+
+            let index = 0;
 
             for (const value of levelArray) {
                 if (value[1].key === status.level) {
-                    index = currentIndex;
                     break;
                 }
-                currentIndex++;
+                index++;
             }
 
-            const nextLevelIndex = index + 1;
-            const nextLevel = levelArray[nextLevelIndex][1];
+            if (index + 1 === status.levelStep && status.levelStep < levelArray.length) {
+                this.nextButton.titleText.text = `进入下一关卡: ${levelArray[status.levelStep][1].name}`;
+                this.nextButton.on('pointerup', () => {
+                    if (index + 1 === status.levelStep && status.levelStep < levelArray.length) {
+                        const status = getArchiveManager().LocalGameStatus;
+                        status.level = levelArray[status.levelStep][1].key;
+                        status.levelStep = index + 1 + 1;
+                        getArchiveManager().LocalGameStatus = status;
+                        this.battleContext.loadLevel(getArchiveManager().LocalGameStatus.level, false);
+                    }
+                });
 
-            this.nextButton.titleText.text = `进入下一关卡: ${nextLevel.name}`;
-            this.nextButton.on('pointerup', () => {
-                if (nextLevelIndex < levelArray.length) {
-                    const status = getArchiveManager().LocalGameStatus;
-                    status.level = levelArray[nextLevelIndex][1].key;
-                    getArchiveManager().LocalGameStatus = status;
-                    this.battleContext.loadLevel(getArchiveManager().LocalGameStatus.level, false);
+                if (this.battleContext.pass) {
+                    this.bottomText.text = ``;
+                    this.nextButton.alpha = 1;
+                    this.nextButton.eventMode = 'static';
                 }
-            });
-
-            this.topText.text = `当前关卡: ${this.battleContext.level.name}`;
-            if (this.battleContext.pass) {
-                this.bottomText.text = ``;
-                this.nextButton.alpha = 1;
-                this.nextButton.eventMode = 'static';
+                else {
+                    const enemyData = getResourceManager().getData('creature', this.battleContext.enemyArray[this.battleContext.enemyArray.length - 1]);
+                    this.bottomText.text = `击败BOSS${enemyData.name}解锁下一关卡: ${levelArray[status.levelStep][1].name}`;
+                    this.nextButton.alpha = 0;
+                    this.nextButton.eventMode = 'none';
+                }
             }
             else {
-                const enemyData = getResourceManager().getData('creature', this.battleContext.enemyArray[this.battleContext.enemyArray.length - 1]);
-                this.bottomText.text = `击败BOSS${enemyData.name}解锁下一关卡: ${nextLevel.name}`;
+                this.bottomText.text = ``;
                 this.nextButton.alpha = 0;
                 this.nextButton.eventMode = 'none';
             }
+
+            this.topText.text = `当前关卡: ${this.battleContext.level.name}`;
+            this.imageSprite.texture = PIXI.Texture.from(`resource/image/level/${this.battleContext.level.image}.png`);
             this.enemyCard.setCreature(enemy);
         };
 

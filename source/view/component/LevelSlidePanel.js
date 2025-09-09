@@ -9,15 +9,9 @@ export class LevelSlidePanel extends PIXI.Container {
         this.pageWidth = 2000;
         this.pageHeight = 4000;
 
-        this.background = new PIXI.Graphics()
-            .beginFill(0x000000, 0.4)
-            .drawRoundedRect(-this.pageWidth / 2, -this.pageHeight / 2, this.pageWidth, this.pageHeight, 0)
-            .endFill();
-        this.addChild(this.background);
-
-        const slideContainer = new SlideContainer(1600, 1600, 400, 0x000000, 1);
+        const slideContainer = new SlideContainer(2000, 1600, 400, 0x000000, 1);
         this.addChild(slideContainer);
-        slideContainer.position.set(-800, -800);
+        slideContainer.position.set(-1000, -800);
 
         const dataTable = getResourceManager().getTable('level');
 
@@ -37,13 +31,5 @@ export class LevelSlidePanel extends PIXI.Container {
             .drawRect(-1000, -800, 2000, 1600);
 
         this.addChild(this.frame);
-
-        this.background.eventMode = 'static';
-        this.background.on('pointerup', this.onBackgroundClick.bind(this));
-    }
-
-    onBackgroundClick() {
-        this.eventMode = 'none';
-        this.alpha = 0;
     }
 }

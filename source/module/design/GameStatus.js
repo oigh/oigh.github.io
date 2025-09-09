@@ -10,5 +10,7 @@ export class GameStatus {
         };
 
         this.level = getResourceManager().getTable('level').values().next().value.key;
+        this.weaponStep = 1;
+        this.levelStep = 1;
     }
 }

@@ -17,18 +17,14 @@ export class WeaponIcon extends PIXI.Container {
             .drawRect(this.border, this.border, this.cardWidth - this.border * 2, this.cardHeight - this.border * 2);
         this.addChild(this.frame);
 
-        this.loadImage(PIXI.Texture.EMPTY);
-
-        this.createTitleLabel();
-        this.setupInteractivity();
-    }
-
-    loadImage(texture) {
-        this.imageSprite = new PIXI.Sprite(texture);
+        this.imageSprite = new PIXI.Sprite(PIXI.Texture.EMPTY);
         this.imageSprite.position.set(this.border, this.border);
         this.imageSprite.width = this.cardWidth - this.border * 2;
         this.imageSprite.height = this.cardHeight - this.border * 2;
         this.addChild(this.imageSprite);
+
+        this.createTitleLabel();
+        this.setupInteractivity();
     }
 
     createTitleLabel() {

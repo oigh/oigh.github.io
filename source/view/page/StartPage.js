@@ -26,9 +26,9 @@ export class StartPage extends PIXI.Container {
         this.battleStage.position.set(1000, 700);
         this.addChild(this.battleStage);
 
-        this.weaponPanel = new WeaponSlidePanel(this.app);
-        this.weaponPanel.position.set(1000, 2800);
-        this.addChild(this.weaponPanel);
+        this.weaponSlidePanel = new WeaponSlidePanel(this.app);
+        this.weaponSlidePanel.position.set(1000, 2800);
+        this.addChild(this.weaponSlidePanel);
 
         this.playerPanel = new PlayerPanel(this.app);
         this.playerPanel.position.set(1000, 1600);
@@ -47,15 +47,27 @@ export class StartPage extends PIXI.Container {
         this.addChild(this.bottomPanel);
 
         this.levelSlidePanel = new LevelSlidePanel(this.app);
-        this.levelSlidePanel.position.set(1000, 2000);
+        this.levelSlidePanel.position.set(1000, 2800);
         this.addChild(this.levelSlidePanel);
+
+        this.weaponSlidePanel.eventMode = 'static';
+        this.weaponSlidePanel.alpha = 1;
 
         this.levelSlidePanel.eventMode = 'none';
         this.levelSlidePanel.alpha = 0;
 
-        this.topPanel.mapButton.on('pointerup', () => {
+        this.bottomPanel.mapButton.on('pointerup', () => {
             this.levelSlidePanel.eventMode = 'static';
             this.levelSlidePanel.alpha = 1;
+            this.weaponSlidePanel.eventMode = 'none';
+            this.weaponSlidePanel.alpha = 0;
+        });
+
+        this.bottomPanel.weaponButton.on('pointerup', () => {
+            this.weaponSlidePanel.eventMode = 'static';
+            this.weaponSlidePanel.alpha = 1;
+            this.levelSlidePanel.eventMode = 'none';
+            this.levelSlidePanel.alpha = 0;
         });
 
         this.levelSlidePanel.on('levelSelect', (level) => {

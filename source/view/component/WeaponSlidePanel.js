@@ -15,11 +15,7 @@ export class WeaponSlidePanel extends PIXI.Container {
 
         const weaponArray = Array.from(dataTable);
 
-        if (weaponArray.length < 10) {
-            throw new Error("data error");
-        }
-
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < weaponArray.length; i++) {
             const item = new WeaponCard();
             item.setWeapon(weaponArray[i][1]);
             item.on('clickWithoutMove', () => {
