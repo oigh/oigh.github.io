@@ -18,6 +18,11 @@ export class BattleStage extends PIXI.Container {
         this.imageSprite.alpha = 0.4;
         this.addChild(this.imageSprite);
 
+        this.frame = new PIXI.Graphics()
+            .lineStyle(10, 0xFFFFFF, 0.2)
+            .drawRect(-1000, -500, 2000, 1000);
+        this.addChild(this.frame);
+
         this.playerCard = new CreatureCard();
         this.playerCard.position.set(-500, 0);
         this.addChild(this.playerCard);
@@ -42,7 +47,7 @@ export class BattleStage extends PIXI.Container {
         this.bottomText.position.set(0, 600);
         this.addChild(this.bottomText);
 
-        this.nextButton = new TextButton(1000);
+        this.nextButton = new TextButton(2000);
         this.nextButton.position.set(0, 600);
         this.addChild(this.nextButton);
 

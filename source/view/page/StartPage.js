@@ -6,6 +6,7 @@ import { TopPanel } from "../component/TopPanel.js";
 import { BottomPanel } from "../component/BottomPanel.js";
 import { LevelSlidePanel } from "../component/LevelSlidePanel.js";
 import { getArchiveManager } from "../../Game.js";
+import { WeaponDataPanel } from "../component/WeaponDataPanel.js";
 
 export class StartPage extends PIXI.Container {
     constructor(app) {
@@ -26,10 +27,6 @@ export class StartPage extends PIXI.Container {
         this.battleStage.position.set(1000, 700);
         this.addChild(this.battleStage);
 
-        this.weaponSlidePanel = new WeaponSlidePanel(this.app);
-        this.weaponSlidePanel.position.set(1000, 2800);
-        this.addChild(this.weaponSlidePanel);
-
         this.playerPanel = new PlayerPanel(this.app);
         this.playerPanel.position.set(1000, 1600);
         this.addChild(this.playerPanel);
@@ -49,9 +46,6 @@ export class StartPage extends PIXI.Container {
         this.levelSlidePanel = new LevelSlidePanel(this.app);
         this.levelSlidePanel.position.set(1000, 2800);
         this.addChild(this.levelSlidePanel);
-
-        this.weaponSlidePanel.eventMode = 'static';
-        this.weaponSlidePanel.alpha = 1;
 
         this.levelSlidePanel.eventMode = 'none';
         this.levelSlidePanel.alpha = 0;
@@ -76,6 +70,20 @@ export class StartPage extends PIXI.Container {
             getArchiveManager().LocalGameStatus = status;
             this.battleStage.battleContext.loadLevel(getArchiveManager().LocalGameStatus.level, false);
         });
+        
+        this.weaponDataPanel = new WeaponDataPanel();
+        this.weaponDataPanel.position.set(1000, 2000);
+        
+        this.weaponSlidePanel = new WeaponSlidePanel(this.weaponDataPanel);
+        this.weaponSlidePanel.position.set(1000, 2800);
+        this.addChild(this.weaponSlidePanel);
+
+        this.addChild(this.weaponDataPanel);
+        this.weaponDataPanel.eventMode = 'none';
+        this.weaponDataPanel.alpha = 0;
+        
+        this.weaponSlidePanel.eventMode = 'static';
+        this.weaponSlidePanel.alpha = 1;
     }
 
     onEnter() {

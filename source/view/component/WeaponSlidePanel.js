@@ -1,11 +1,12 @@
 import { SlideContainer } from "./SlideContainer.js";
 import { WeaponCard } from "./WeaponCard.js";
 import { getResourceManager } from "../../Game.js";
-import { WeaponDataPanel } from "./WeaponDataPanel.js";
 
 export class WeaponSlidePanel extends PIXI.Container {
-    constructor() {
+    constructor(weaponDataPanel) {
         super();
+
+        this.weaponDataPanel = weaponDataPanel;
 
         const slideContainer = new SlideContainer(2000, 1600, 400, 0x000000, 1);
         this.addChild(slideContainer);
@@ -31,10 +32,5 @@ export class WeaponSlidePanel extends PIXI.Container {
             .drawRect(-1000, -800, 2000, 1600);
 
         this.addChild(this.frame);
-
-        this.weaponDataPanel = new WeaponDataPanel();
-        this.addChild(this.weaponDataPanel);
-        this.weaponDataPanel.eventMode = 'none';
-        this.weaponDataPanel.alpha = 0;
     }
 }

@@ -11,10 +11,10 @@ export class WeaponDataPanel extends PIXI.Container {
         super();
 
         this.pageWidth = 2000;
-        this.pageHeight = 1600;
+        this.pageHeight = 4000;
 
         this.panelWidth = 1600;
-        this.panelHeight = 1200;
+        this.panelHeight = 2000;
 
         this.setup();
 
@@ -52,19 +52,19 @@ export class WeaponDataPanel extends PIXI.Container {
         this.createStarLabel();
 
         this.strengthUpButton = new TextButton();
-        this.strengthUpButton.position.set(600, -50);
+        this.strengthUpButton.position.set(600, 350);
         this.strengthUpButton.titleText.text = '强化';
         this.strengthUpButton.on('pointerup', this.onAppendStrengthUpClick.bind(this));
         this.addChild(this.strengthUpButton);
 
         this.starUpButton = new TextButton();
-        this.starUpButton.position.set(600, 200);
+        this.starUpButton.position.set(600, 600);
         this.starUpButton.titleText.text = '升星';
         this.starUpButton.on('pointerup', this.onStarUpClick.bind(this));
         this.addChild(this.starUpButton);
 
         this.levelUpButton = new TextButton();
-        this.levelUpButton.position.set(600, 450);
+        this.levelUpButton.position.set(600, 850);
         this.levelUpButton.titleText.text = '升级';
         this.levelUpButton.on('pointerup', this.onLevelUpClick.bind(this));
         this.addChild(this.levelUpButton);
@@ -85,7 +85,7 @@ export class WeaponDataPanel extends PIXI.Container {
         this.starArray = [];
         for (let i = 0; i < 10; i++) {
             const sprite = new PIXI.Sprite(texture);
-            sprite.position.set(-400 + 60 * i + 5, -300);
+            sprite.position.set(-400 + 60 * i + 5, -700);
             sprite.width = 50;
             sprite.height = 50;
 
@@ -99,22 +99,22 @@ export class WeaponDataPanel extends PIXI.Container {
         this.titleText = new PIXI.Text('TITLE', {
             ...PIXI.Text.defaultStyle, fontSize: 50,
         });
-        this.titleText.position.set(-400, -525);
+        this.titleText.position.set(-400, -925);
         this.addChild(this.titleText);
 
         this.contentText = new PIXI.Text('CONTENT', {
             ...PIXI.Text.defaultStyle, fontSize: 50,
         });
-        this.contentText.position.set(-400, -450);
+        this.contentText.position.set(-400, -850);
         this.addChild(this.contentText);
 
         this.appendText = new PIXI.Text('APPEND', {
             ...PIXI.Text.defaultStyle, fontSize: 50,
         });
-        this.appendText.position.set(-400, -375);
+        this.appendText.position.set(-400, -775);
         this.addChild(this.appendText);
 
-        let y = -200;
+        let y = -600;
 
         this.attackDescriptionText = new PIXI.Text('攻击 = (基础强度 + 附加强度) x 等级', {
             ...PIXI.Text.defaultStyle, fontSize: 50,

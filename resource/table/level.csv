@@ -1,5 +1,5 @@
 key,name,image,type,enemy,level
-FlowerVillage,杏花村,FlowerVillage,scene,Pig#Pig,1
-PigChallenge,猪林,PigForest,scene,Pig#Pig,2
-BlackMountain,黑风山,DarkMountain,scene,Pig#Pig,4
-RedValley,红叶谷,RedValley,scene,Pig#Pig,8
+FlowerVillage,杏花村,FlowerVillage,scene,Thief#Pig,1
+PigChallenge,猪林,PigForest,scene,Woof#Pig,2
+BlackMountain,黑风山,DarkMountain,scene,Thief#Pig,4
+RedValley,红叶谷,RedValley,scene,Woof#Pig,8
