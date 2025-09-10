@@ -1,3 +1,5 @@
+import { NumberHelper } from "../../helper/NumberHelper.js";
+
 export class CreatureCard extends PIXI.Container {
     constructor(flip = false) {
         super();
@@ -8,7 +10,7 @@ export class CreatureCard extends PIXI.Container {
         this.color = 0xffffff;
         this.flip = flip;
         this.init();
-        
+
         this.pivot.set(375 / 2, 250);
     }
 
@@ -118,20 +120,20 @@ export class CreatureCard extends PIXI.Container {
     onPointerUp() {
     }
 
-    setCreature(creature){
+    setCreature(creature) {
         this.titleText.text = creature.name;
         this.imageSprite.texture = PIXI.Texture.from(`resource/image/creature/${creature.image}.png`);
         this.setMaxHealth(creature.health, creature.health)
     }
 
-    setHealth(health){
-        this.healthText.text = health;
+    setHealth(health) {
+        this.healthText.text = NumberHelper.fn(health);
         this.healthImage.scale.x = health / this.maxHealth;
     }
 
-    setMaxHealth(health, maxHealth){
+    setMaxHealth(health, maxHealth) {
         this.maxHealth = maxHealth;
-        this.healthText.text = health;
+        this.healthText.text = NumberHelper.fn(health);
         this.healthImage.scale.x = health / this.maxHealth;
     }
 }

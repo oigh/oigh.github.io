@@ -22,7 +22,7 @@ export class BattleContext {
     createEnemy(enemyKey) {
         const enemyData = getResourceManager().getData('creature', enemyKey);
         enemyData.health *= this.level.level;
-        enemyData.attack *= this.level.level;
+        enemyData.coin *= this.level.level;
         this.enemy = new BattleCreature(this, () => { return enemyData; });
 
         this.onEnemyChange(enemyData);
@@ -112,7 +112,7 @@ export class BattleContext {
         if (this.enemy && this.enemy.state === BattleCreature.STATE_NULL) {
 
             // get coin
-            getArchiveManager().addProp('coin', this.enemy.getCreature().attack);
+            getArchiveManager().addProp('coin', this.enemy.getCreature().coin);
 
             if (this.enemyIndex + 1 < this.enemyArray.length) {
                 this.enemyIndex++;

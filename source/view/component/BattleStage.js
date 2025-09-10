@@ -5,7 +5,7 @@ import { TextEffect } from "./TextEffect.js";
 import { AnimHelper } from "../../helper/AnimHelper.js";
 import { getArchiveManager, getResourceManager } from '../../Game.js';
 import { TextButton } from './TextButton.js';
-import { GameWeapon } from '../../module/design/GameWeapon.js';
+import { NumberHelper } from '../../helper/NumberHelper.js';
 
 export class BattleStage extends PIXI.Container {
     constructor(app) {
@@ -168,7 +168,7 @@ export class BattleStage extends PIXI.Container {
         };
 
         this.battleContext.onHurt = (bullet) => {
-            const text = '-' + bullet.damage;
+            const text = '-' + NumberHelper.fn(bullet.damage);
             const color = 0xFF0000;
             if (bullet.fromPlayer) {
                 const hurtTextEffect = new TextEffect(text, color, this.enemyCard.position);

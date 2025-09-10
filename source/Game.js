@@ -18,7 +18,7 @@ export function initGame(app) {
         playerManager = new PlayerManager();
 
         // init
-        getArchiveManager().LocalGameStatus = null;
+        // getArchiveManager().LocalGameStatus = null;
         if (!getArchiveManager().LocalGameStatus) {
             const status = new GameStatus();
             status.weapons[Array.from(getResourceManager().getTable('weapon'))[0][0]] = new GameWeapon(1);

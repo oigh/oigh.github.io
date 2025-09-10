@@ -164,7 +164,7 @@ export class WeaponCard extends PIXI.Container {
 
         const props = getArchiveManager().LocalGameStatus.props;
 
-        const sLevelUp = GameWeapon.getLevelUpCost(this.weaponProfile, this.gameWeapon) + `(${NumberHelper.fn(props['coin'] ?? 0)})`;
+        const sLevelUp = NumberHelper.fn(GameWeapon.getLevelUpCost(this.weaponProfile, this.gameWeapon)) + `(${NumberHelper.fn(props['coin'] ?? 0)})`;
         const sStrengthUp = GameWeapon.getAppendStrengthUpCost(this.gameWeapon) + `(${props[this.weaponProfile.key + 'Stone'] ?? 0})`;
         const sStarUp = GameWeapon.getStarUpCost(this.gameWeapon) + `(${props[this.weaponProfile.key + 'Stone'] ?? 0})`;
 
